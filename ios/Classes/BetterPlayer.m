@@ -33,6 +33,7 @@ AVPictureInPictureController *_pipController;
         _player.automaticallyWaitsToMinimizeStalling = false;
     }
     self._observersAdded = false;
+    _bufferDuration = 0;
     return self;
 }
 
@@ -227,6 +228,9 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
 
     if (@available(iOS 10.0, *) && overriddenDuration > 0) {
         _overriddenDuration = overriddenDuration;
+    }
+    if (@available(iOS 10.0, *)) {
+        [item setPreferredForwardBufferDuration:_bufferDuration];
     }
     return [self setDataSourcePlayerItem:item withKey:key];
 }
@@ -541,6 +545,10 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
 
 - (void)setVolume:(double)volume {
     _player.volume = (float)((volume < 0.0) ? 0.0 : ((volume > 1.0) ? 1.0 : volume));
+}
+
+- (void)setBufferDuration:(NSTimeInterval)bufferDuration {
+    _bufferDuration = bufferDuration;
 }
 
 - (void)setSpeed:(double)speed result:(FlutterResult)result {
